@@ -369,8 +369,20 @@ describe('SitemapStream', () => {
         try { sitemap.inject([ '/some-path' ]); }
         catch (e) { errTwo = e.message; }
 
-        expect(errOne).to.be.equal('Cannot read property \'url\' of undefined');
-        expect(errTwo).to.be.equal('ValidationError: "value" must be an object');
+        expect(
+          [
+            "Cannot read properties of undefined (reading 'url')", 
+            "Cannot read property 'url' of undefined"
+          ].includes(errOne)
+        ).to.be.equal(true)
+
+        expect(
+          [
+            'ValidationError: "value" must be an object',
+            'ValidationError: "value" must be of type object'
+          ].includes(errTwo)
+        ).to.be.equal(true)
+
       });
     });
 

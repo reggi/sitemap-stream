@@ -4,9 +4,6 @@ const fs = require('fs');
 const url = require('url');
 const EventEmitter = require('events').EventEmitter;
 const zlib = require('zlib');
-
-const Joi = require('joi');
-
 const schemas = require('./schemas');
 
 class SitemapStream extends EventEmitter {
@@ -86,7 +83,7 @@ class SitemapStream extends EventEmitter {
   inject(entry) {
     if (typeof entry === 'string') entry = { url: entry };
 
-    const validation = Joi.validate(entry, schemas.entry);
+    const validation = schemas.entry.validate(entry);
     if (validation.error) throw new Error(validation.error);
 
     if (!this.nbInjectedUrls || this.nbInjectedUrls % this.limit === 0) this.changeWriteStream();
@@ -173,7 +170,7 @@ class SitemapStream extends EventEmitter {
 }
 
 module.exports = conf => {
-  const valideConf = Joi.validate(conf || {}, schemas.config);
+  const valideConf = schemas.config.validate(conf || {});
 
   if (valideConf.error) throw new Error('Invalid parameters: ', valideConf.error);
 
